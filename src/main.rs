@@ -15,18 +15,28 @@
 // along with dynamic-wallpaper.  If not, see <http://www.gnu.org/licenses/>.
 
 use image::GenericImageView;
+mod err;
+mod image_locator;
+mod cli;
 
-fn main() {
+use failure::Error;
+use cli::Cli;
+use image_locator::ImageLocator;
+
+fn main() -> Result<(), Error> {
     // Use the open function to load an image from a Path.
     // ```open``` returns a `DynamicImage` on success.
-    let img = image::open("tests/images/jpg/progressive/cat.jpg").unwrap();
+    let config = Cli::get();
+    let folder = ImageLocator::new(config.folder())?;
 
-    // The dimensions method returns the images width and height.
-    println!("dimensions {:?}", img.dimensions());
-
-    // The color method returns the image's `ColorType`.
-    println!("{:?}", img.color());
-
+    for image in folder.entries() {
+        let img = image::open(image)?;
+        println!("===================================");
+        println!("dimensions {:?}", img.dimensions());
+        println!("{:?}", img.color());
+        println!("===================================");
+    }
+    Ok(())
     // Write the contents of this image to the Writer in PNG format.
-    img.save("test.png").unwrap();
+    // img.save("test.png").unwrap();
 }

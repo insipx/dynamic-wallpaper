@@ -9,3 +9,6 @@ edition = "2018"
 [dependencies]
 image = "0.22.3"
 interpolation = "0.2.0"
+failure = "0.1.6"
+quicli = "0.4.0"
+structopt = "0.3.3"
